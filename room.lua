@@ -12,6 +12,6 @@ Room.new = function(x, y, width, height, type)
 end
 
 Room.type = {
-    start = {},
-    finish = {}
+    start = {color = {0, 178, 128}},
+    finish = {color = {193, 39, 45}}
 }
