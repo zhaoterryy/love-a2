@@ -1,10 +1,13 @@
 require "cell"
 require "room"
-local mutil = require "maze_util"
+local maze_util = require "maze_util"
 Maze = {}
 Maze.__index = Maze
 
 -- constant globals
+-- ROOM_SIZE must be multiple of width / SQRT_OF_NUM_CELLS
+-- SQRT_OF_NUM_CELLS must be multiple of width
+-- i.e. width: 750, 90/50, 100/30, 100/75, 150/10, 100/15
 ROOM_SIZE = 100
 SQRT_OF_NUM_CELLS = 30
 
@@ -18,11 +21,15 @@ Maze.new = function(width, height)
 
     self.cells = {}
     self.cells_nx = SQRT_OF_NUM_CELLS
-    self.cells_ny = NUM_CELLS_Y
     self.cell_size = width / self.cells_nx
-    mutil.fill(self.cells, self.cells_nx, self.cells_nx, self.cell_size)
+    maze_util.fill(self.cells, self.cells_nx, self.cells_nx, self.cell_size)
 
-    self.rooms = mutil.generate_rooms(math.min(width/2 - ROOM_SIZE/2, height/2 - ROOM_SIZE/2), width/2, height/2, self.cell_size, self.cells)
+    self.rooms = maze_util.generate_rooms(math.min(width/2 - ROOM_SIZE/2, height/2 - ROOM_SIZE/2), width/2, height/2, self.cell_size, self.cells)
+    maze_util.gen_path_easy(self.cells, self.rooms)
+
+    -- for _,v in pairs(self.rooms) do
+    --     print (v.cx, v.cy)
+    -- end
 
     return self
 end
